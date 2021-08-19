@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "192041012218",
+    "project_id": "g-mis-9c9e6",
+    "storage_bucket": "g-mis-9c9e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192041012218:android:e4c775b3bca283d0067243",
+        "android_client_info": {
+          "package_name": "com.spl.mis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192041012218-ni0h60r1qgfi55r4copfdlmja9kdl1ff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNbEes2d7nemQHmvganSb5c70LhpiOQYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192041012218-ni0h60r1qgfi55r4copfdlmja9kdl1ff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
