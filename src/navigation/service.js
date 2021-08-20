@@ -33,3 +33,12 @@ export const _gotoForgetPassword = (navigation) => {
         routes: [{ name: ROUTES.DASHBOARD }]
     });
 }
+
+/**
+ * Function that takes user to web page
+ * @param {Object} navigation 
+ * @param {Object} home_item
+ */
+ export const _gotoWebPage = (navigation, home_item) => {
+    navigation.navigate(ROUTES.WEBPAGE, {home_item});
+}

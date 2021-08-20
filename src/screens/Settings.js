@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    StyleSheet, 
-    Text, 
+    StyleSheet,
     View
 } from 'react-native';
-import { AppBar } from '../components';
+import { AppBar, OverlayLoader, SimpleButton } from '../components';
 
-import { FONTS } from '../config';
+import { THEME } from '../config';
+import { _logoutUser } from '../firebase/firebase';
 import { useColors } from '../hooks';
+import { _gotoAuth } from '../navigation/service';
+import { _showDismissAlert } from '../utils/messages';
 
-const Settings = () => {
+const Settings = ({navigation}) => {
 
+    const [isLoading, setLoading] = useState(false);
     const colors = useColors();
+
+    // Function to logout user
+    const _onLogoutClick = async () => {
+        setLoading(true);
+        await _logoutUser()
+        .then(()=>{
+            _gotoAuth(navigation);
+        })
+        .catch((err)=>{
+            _showDismissAlert(err.message);
+        });
+        setLoading(false);
+    }
 
     return (
         <View style={[styles._mainContainer, {backgroundColor: colors.whiteColor}]}>
@@ -19,7 +35,21 @@ const Settings = () => {
                 backgroundColor={colors.background}
                 barType='light'
             />
-            <Text style={[styles._info, {color: colors.background}]}>Settings</Text>
+
+            {
+                isLoading && 
+                <OverlayLoader 
+                    width={THEME.WP('100%')}
+                    height={THEME.HP('100%')}
+                />
+            }
+
+            <SimpleButton 
+                onPress={_onLogoutClick}
+                title='Logout'
+                titleColor={colors.whiteColor}
+                buttonColor={colors.primary}
+            />
         </View>
     )
 }
@@ -27,13 +57,8 @@ const Settings = () => {
 const styles = StyleSheet.create({
     _mainContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        padding: THEME.THEMING.spacing_20,
     },
-    _info:{
-        ...FONTS.body3_bold,
-        textTransform: 'uppercase'
-    }
 });
 
 export default Settings;

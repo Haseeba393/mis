@@ -36,10 +36,21 @@ const DARK_THEME = {
   },
 };
 
+const SHADOWS = {
+  shadow1: {
+      shadowColor: 'black',
+      shadowOffset: {width: 2, height: 2},
+      shadowOpacity: 0.2,
+      shadowRadius: THEMING.radius_20,
+      elevation: 5,
+  }
+}
+
 export default {
   LIGHT_THEME,
   DARK_THEME,
   WP,
   HP,
-  THEMING
+  THEMING,
+  SHADOWS
 }

@@ -39,10 +39,14 @@ const Login = ({navigation}) => {
             .then(()=>{
                 // Login Successfull
                 _gotoDashboard(navigation);
+
+                // Clearing fields
+                setEmail('');
+                setPassword('');
             })
             .catch((err)=>{
                 // Login Unsuccessfull
-                _showDismissAlert("Authentication failed. Please check your details carefully");
+                _showDismissAlert(err.message);
             });
 
             setLoading(false);

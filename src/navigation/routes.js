@@ -7,4 +7,5 @@ export const ROUTES = {
     NOTIFICATION_TAB: 'notificationtab',
     SETTINGS_TAB: 'settingstab',
     DASHBOARD: 'dashboard',
+    WEBPAGE: 'webpage'
 }

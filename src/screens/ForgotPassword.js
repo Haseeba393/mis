@@ -6,19 +6,39 @@ import {
 } from 'react-native';
 import { AppBar, OverlayLoader, SimpleButton, SimpleInput } from '../components';
 import { FONTS, THEME } from '../config';
+import { _sendPasswordResetLink } from '../firebase/firebase';
 import { useColors } from '../hooks';
+import { _showDismissAlert } from '../utils/messages';
+import { _validateEmail } from '../utils/validation';
 
-const ForgotPassword = () => {
+const ForgotPassword = ({navigation}) => {
 
+    const [email, setEmail] = useState('');
     const [isLoading, setLoading] = useState(false);
     const colors = useColors();
 
     // Function to send email to email
-    const _onSendBtnClick = () => {
-        setLoading(true);
-        setTimeout(() => {
+    const _onSendBtnClick = async () => {
+        if(email.length == 0)
+            _showDismissAlert("Email is required");
+        else if(!_validateEmail(email))
+            _showDismissAlert("Email is invalid. Please try again with valid Email e.g. abc@abc.abc");
+        else{
+
+            setLoading(true);
+            await _sendPasswordResetLink(email.trim().toLowerCase())
+            .then(()=>{
+                _showDismissAlert("Link has been sent successfully");
+                setEmail('');
+                navigation.goBack();
+            })
+            .catch((err)=>{
+                _showDismissAlert(err.message);
+            });
+
             setLoading(false);
-        }, 1500);
+
+        }
     }
 
     return (
@@ -39,6 +59,8 @@ const ForgotPassword = () => {
             <Text style={[styles._info, { color: colors.text }]}>Please enter your registered email. A password reset link will be sent to your email.</Text>
             <SimpleInput 
                 placeholder='Registered Email'
+                value={email}
+                onChangeText={text => setEmail(text)}
                 style={{ marginVertical: THEME.THEMING.spacing_15 }}
             />
             <SimpleButton 

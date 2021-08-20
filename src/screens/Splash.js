@@ -8,16 +8,25 @@ import {
 import { AppBar } from '../components';
 import { IMAGES, THEME } from '../config';
 import { useColors } from '../hooks';
-import { _gotoAuth } from '../navigation/service';
+import { _gotoAuth, _gotoDashboard } from '../navigation/service';
+import auth from '@react-native-firebase/auth';
 
 export const Splash = ({navigation}) => {
 
     const colors = useColors();
 
+    // Effect to check user logged in state
     useEffect(()=>{
+        let sub = null;
         setTimeout(() => {
-            _gotoAuth(navigation);
+            sub = auth().onAuthStateChanged((user)=>{
+                if(user)
+                    _gotoDashboard(navigation);
+                else
+                    _gotoAuth(navigation);
+            })
         }, 2000);
+        return sub;
     },[])
 
     return(

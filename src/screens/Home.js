@@ -1,17 +1,37 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import {
     StyleSheet, 
-    Text, 
-    View
+    View,
+    FlatList,
+    Animated,
 } from 'react-native';
-import { AppBar } from '../components';
 
-import { FONTS } from '../config';
+import { AppBar, HomeCard } from '../components';
+import { CONSTANTS, THEME } from '../config';
 import { useColors } from '../hooks';
 
-const Home = () => {
+
+
+const Home = ({navigation}) => {
+
+    // For animation
+    const slidingValue = new Animated.Value(1500);
+    // Interploting the animation value
+    const slide = slidingValue.interpolate({
+        inputRange: [0, 100],
+        outputRange: [1, 100],
+    });
 
     const colors = useColors();
+
+    // Effect to perform animation on list
+    useEffect(() => {
+        Animated.spring(slidingValue,{
+            toValue: 1,
+            damping: 50,
+            useNativeDriver: true,
+        }).start();
+    }, [])
 
     return (
         <View style={[styles._mainContainer, {backgroundColor: colors.whiteColor}]}>
@@ -19,7 +39,24 @@ const Home = () => {
                 backgroundColor={colors.background}
                 barType='light'
             />
-            <Text style={[styles._info, {color: colors.background}]}>HOME</Text>
+            
+            <Animated.View style={{ flex: 1, transform: [{ translateY: slide }] }}>
+                <FlatList 
+                    showsVerticalScrollIndicator={false}
+                    data={CONSTANTS.HOME_LIST}
+                    style={{
+                        flex: 1,
+                    }}
+                    contentContainerStyle={styles._scrollContainer}
+                    keyExtractor={item => item.key}
+                    renderItem={({item, index})=>(
+                        <HomeCard 
+                            navigation={navigation}
+                            home_item={item}
+                        />
+                    )}
+                />
+            </Animated.View>
         </View>
     )
 }
@@ -27,13 +64,12 @@ const Home = () => {
 const styles = StyleSheet.create({
     _mainContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
-    _info:{
-        ...FONTS.body3_bold,
-        textTransform: 'uppercase'
-    }
+    _scrollContainer:{
+        padding: THEME.THEMING.spacing_15,
+        backgroundColor: 'white',
+        paddingBottom: '20%'
+    },
 });
 
 export default Home;
