@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { 
     StyleSheet, 
     Text, 
     View,
     Image,
 } from 'react-native';
+
+import FingerprintScanner from 'react-native-fingerprint-scanner';
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import { AppBar, PasswordInput, SimpleInput, SimpleButton, OverlayLoader } from '../components';
-import { FONTS, IMAGES, THEME } from '../config';
+import { CONSTANTS, FONTS, IMAGES, THEME } from '../config';
 import { _loginUser } from '../firebase/firebase';
 import { useColors } from '../hooks';
 import { _gotoDashboard, _gotoForgetPassword } from '../navigation/service';
+import { _getAsync, _setAsync } from '../utils/async';
 import { _showDismissAlert } from '../utils/messages';
 import { _validateEmail } from '../utils/validation';
 
@@ -17,6 +21,7 @@ const Login = ({navigation}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isFingerprintAvailable, setFinerprintAviable] = useState('');
     const [isLoading, setLoading] = useState(false);
     const colors = useColors();
 
@@ -36,9 +41,13 @@ const Login = ({navigation}) => {
 
             // Calling firebase login function to login
             await _loginUser(email.toLowerCase().trim(), password.trim())
-            .then(()=>{
+            .then(async()=>{
                 // Login Successfull
                 _gotoDashboard(navigation);
+
+                // Saving Email and password in async storage
+                await _setAsync('email', email.trim().toLowerCase());
+                await _setAsync('password', password.trim());
 
                 // Clearing fields
                 setEmail('');
@@ -52,6 +61,70 @@ const Login = ({navigation}) => {
             setLoading(false);
         }
     }
+
+    // When user will click on finger print icon
+    const _onFingerprintClick = async () => {
+        
+        // Checking is senser available
+        await FingerprintScanner.isSensorAvailable()
+        .then(async(type)=>{
+            FingerprintScanner.authenticate({})
+            .then(async()=>{
+
+                const userEmail = await _getAsync('email');
+                const userPassword = await _getAsync('password');
+
+                setLoading(true);
+
+                // Calling firebase login function to login
+                await _loginUser(userEmail.toLowerCase().trim(), userPassword.trim())
+                .then(()=>{
+                    // Login Successfull
+                    _gotoDashboard(navigation);
+                })
+                .catch((err)=>{
+                    // Login Unsuccessfull
+                    _showDismissAlert(err.message);
+                });
+
+                setLoading(false);
+
+            })
+            .catch((err)=>{
+                _showDismissAlert(err.message);
+            })
+        })
+        .catch((err)=>{
+            _showDismissAlert(err.message);
+        })
+    }
+
+    // Effect to check is finger print available
+    useLayoutEffect(()=>{
+        const _checkFingerprint = async () => {
+            await _getAsync('fingerprint')
+            .then((value)=>{
+                setFinerprintAviable(value);
+            })
+            .catch((err)=>{
+                _showDismissAlert(err.message);
+            })
+        }
+    },[])
+
+    // Effect to get last logged in email
+    useEffect(()=>{
+        const _getLastLoggedInEmail = async () => {
+            await _getAsync('email')
+            .then((value)=>{
+                setEmail(value);
+            })
+            .catch((err)=>{
+                _showDismissAlert(err.message);
+            })
+        }
+        _getLastLoggedInEmail();
+    },[]);
 
     return (
         <View style={styles._mainContainer}>
@@ -107,6 +180,21 @@ const Login = ({navigation}) => {
                     buttonColor={colors.primary}
                     buttonStyle={{ marginTop: THEME.THEMING.spacing_20 * 2 }}
                 />
+
+                {
+                    //isFingerprintAvailable == 'true' &&
+                    isFingerprintAvailable == 'true' &&
+                    <View style={styles._fingerprintView}>
+                        <Text style={[styles._label, {color: colors.border} ]}>or login with</Text>
+                        <MatIcon 
+                            onPress={_onFingerprintClick}
+                            name='fingerprint'
+                            size={CONSTANTS.ICON_SIZE * 3}
+                            color={colors.whiteColor}
+                        />
+                    </View>
+                    
+                }
                 
             </View>
 
@@ -132,6 +220,13 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         alignSelf: 'flex-end',
         marginTop: THEME.THEMING.spacing_10 / 2,
+    },
+    _fingerprintView:{
+        alignItems: 'center',
+    },
+    _label:{
+        ...FONTS.body5_regular,
+        marginVertical: THEME.THEMING.spacing_15,
     },
 });
 

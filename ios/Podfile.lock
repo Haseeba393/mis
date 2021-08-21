@@ -258,6 +258,8 @@ PODS:
     - React-jsi (= 0.65.0)
     - React-perflogger (= 0.65.0)
   - React-jsinspector (0.65.0)
+  - react-native-fingerprint-scanner (6.0.0):
+    - React
   - react-native-safe-area-context (3.3.0):
     - React-Core
   - react-native-webview (11.13.0):
@@ -326,14 +328,16 @@ PODS:
     - React-cxxreact (= 0.65.0)
     - React-jsi (= 0.65.0)
     - React-perflogger (= 0.65.0)
-  - RNFBApp (12.7.0):
+  - RNCAsyncStorage (1.15.6):
+    - React-Core
+  - RNFBApp (12.7.2):
     - Firebase/CoreOnly (= 8.6.0)
     - React-Core
-  - RNFBAuth (12.7.0):
+  - RNFBAuth (12.7.2):
     - Firebase/Auth (= 8.6.0)
     - React-Core
     - RNFBApp
-  - RNFBDatabase (12.7.0):
+  - RNFBDatabase (12.7.2):
     - Firebase/Database (= 8.6.0)
     - React-Core
     - RNFBApp
@@ -362,6 +366,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-fingerprint-scanner (from `../node_modules/react-native-fingerprint-scanner`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -376,6 +381,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
@@ -430,6 +436,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-fingerprint-scanner:
+    :path: "../node_modules/react-native-fingerprint-scanner"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -458,6 +466,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -500,6 +510,7 @@ SPEC CHECKSUMS:
   React-jsi: 875bcbe2037c9cae07fbda7dd5827fbca06cbdc6
   React-jsiexecutor: 11ec08ad247abb44113ccb3d2b66f7e856d1cdf4
   React-jsinspector: 2aa5dc1b9a02a81c0dcc70c00f2cbe1cd4b875c4
+  react-native-fingerprint-scanner: c68136ca57e3704d7bdf5faa554ea535ce15b1d0
   react-native-safe-area-context: 8465df05de8106c584b117f0e027e17174d6e02e
   react-native-webview: b176c6404ad40d10cfc818be41c053f85a72d751
   React-perflogger: 494c61caaf9b7da0a0a612fa4ed570ab7ab5819b
@@ -514,9 +525,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: ca17687ea259e8b6bbd4ad74f1f6ec87bff845d8
   React-runtimeexecutor: a9a1ac6a60389c3c588fd9b9158a30ed4d8d28a4
   ReactCommon: c11b11a5dc8187826144b7b3d72125c77a1b7b1a
-  RNFBApp: 89e2c070a5433a312e00e18d9d31f42fc2634f78
-  RNFBAuth: d94728591b9f9a7cf1da0fedbd66a85ffba06cce
-  RNFBDatabase: 6e03e1f77aa7ead14a75d0699e149534be3ddef4
+  RNCAsyncStorage: bb9649cb43f0040f82948084a0044e45292c5be3
+  RNFBApp: 9c4eb84da8418346829c0d0220c4794d1de7b1f6
+  RNFBAuth: 9a1a0e6fb9b3ccba2159a5f52a2891df437f0ce4
+  RNFBDatabase: bf4a1be046e32582004f610dac39b1abb1177631
   RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 1561f557b0c2b6047a91f7619f666134e2288916
