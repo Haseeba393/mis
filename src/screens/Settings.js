@@ -5,15 +5,17 @@ import {
     Switch,
     Text,
 } from 'react-native';
-import { AppBar, OverlayLoader, SimpleButton } from '../components';
 
+import TouchID from 'react-native-touch-id';
+import { AppBar, OverlayLoader, SimpleButton } from '../components';
 import { FONTS, THEME } from '../config';
 import { _logoutUser } from '../firebase/firebase';
 import { useColors } from '../hooks';
 import { _gotoAuth } from '../navigation/service';
 import { _showDismissAlert } from '../utils/messages';
 import { _getAsync, _setAsync } from '../utils/async';
-import FingerprintScanner from 'react-native-fingerprint-scanner';
+import { FINGERPRINT_CONFIG, PLATFORM } from '../config/constants';
+import { useLayoutEffect } from 'react';
 
 const Settings = ({navigation}) => {
 
@@ -23,25 +25,64 @@ const Settings = ({navigation}) => {
 
     const _toggleFingerprint = async (value) => {
 
-        // Checking is senser available
-        await FingerprintScanner.isSensorAvailable()
-        .then(async(type)=>{
-            if(value == false){
-                await _setAsync('fingerprint', 'false');
+        //Checking is senser available
+        await TouchID.isSupported()
+        .then(async(biometryType)=>{
+            if(PLATFORM === 'ios'){
+                if(biometryType == "TouchID"){
+
+                    if(value == false){
+                        await _setAsync('fingerprint', 'false');
+                        setFingerprint(value);
+                    }
+                    else{
+                        TouchID.authenticate('Instant authentication using Touch Sensor',FINGERPRINT_CONFIG)
+                        .then(async()=>{
+                            await _setAsync('fingerprint', 'true');
+                            setFingerprint(value);
+                        })
+                        .catch((err)=>{
+                            if(PLATFORM == 'ios' && err.name == 'LAErrorUserCancel')
+                                console.log("User cancel the auth");
+                            else
+                                _showDismissAlert(err.message);
+                        })
+                    }
+                }
+                else{
+                    setFingerprint(false);
+                    _showDismissAlert("Touch ID is not supported on your device or not enrolled yet");
+                }
             }
             else{
-                FingerprintScanner.authenticate({})
-                .then(async()=>{
-                    await _setAsync('fingerprint', 'true');
-                })
-                .catch((err)=>{
-                    _showDismissAlert(err);
-                })
-            }
-            setFingerprint(value);
+                if(biometryType){
+                    if(value == false){
+                        await _setAsync('fingerprint', 'false');
+                        setFingerprint(value);
+                    }
+                    else{
+                        TouchID.authenticate('Instant authentication using Touch Sensor',FINGERPRINT_CONFIG)
+                        .then(async()=>{
+                            await _setAsync('fingerprint', 'true');
+                            setFingerprint(value);
+                        })
+                        .catch((err)=>{
+                            if(err.code == 'USER_CANCELED' || err.code == 'AUTHENTICATION_CANCELED')
+                                console.log("User cancel the auth");
+                            else
+                                _showDismissAlert(err.message);
+                        })
+                    }
+                }
+                else{
+                    setFingerprint(false);
+                    _showDismissAlert("Touch ID is not supported on your device or not enrolled yet");
+                }
+            } 
         })
         .catch((err)=>{
-            _showDismissAlert(err.message);
+            console.log(err);
+            _showDismissAlert(err);
         })
     }
 
@@ -57,6 +98,24 @@ const Settings = ({navigation}) => {
         });
         setLoading(false);
     }
+
+    // Checking for fingerprint value
+    useLayoutEffect(()=>{
+        const _checkFingerprint = async () => {
+            await _getAsync('fingerprint')
+            .then((value)=>{
+                console.log(value);
+                if(value != null && value != undefined && value == 'true')
+                    setFingerprint(true);
+                else
+                    setFingerprint(false);
+            })
+            .catch((err)=>{
+                _showDismissAlert(err.message);
+            })
+        }
+        _checkFingerprint();
+    },[])
 
     return (
         <View style={[styles._mainContainer, {backgroundColor: colors.whiteColor}]}>

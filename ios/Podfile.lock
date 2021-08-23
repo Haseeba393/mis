@@ -258,8 +258,6 @@ PODS:
     - React-jsi (= 0.65.0)
     - React-perflogger (= 0.65.0)
   - React-jsinspector (0.65.0)
-  - react-native-fingerprint-scanner (6.0.0):
-    - React
   - react-native-safe-area-context (3.3.0):
     - React-Core
   - react-native-webview (11.13.0):
@@ -346,6 +344,8 @@ PODS:
     - React-RCTImage
   - RNVectorIcons (8.1.0):
     - React-Core
+  - TouchID (4.4.1):
+    - React
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -366,7 +366,6 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-fingerprint-scanner (from `../node_modules/react-native-fingerprint-scanner`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -387,6 +386,7 @@ DEPENDENCIES:
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -436,8 +436,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
-  react-native-fingerprint-scanner:
-    :path: "../node_modules/react-native-fingerprint-scanner"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -478,6 +476,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TouchID:
+    :path: "../node_modules/react-native-touch-id"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -510,7 +510,6 @@ SPEC CHECKSUMS:
   React-jsi: 875bcbe2037c9cae07fbda7dd5827fbca06cbdc6
   React-jsiexecutor: 11ec08ad247abb44113ccb3d2b66f7e856d1cdf4
   React-jsinspector: 2aa5dc1b9a02a81c0dcc70c00f2cbe1cd4b875c4
-  react-native-fingerprint-scanner: c68136ca57e3704d7bdf5faa554ea535ce15b1d0
   react-native-safe-area-context: 8465df05de8106c584b117f0e027e17174d6e02e
   react-native-webview: b176c6404ad40d10cfc818be41c053f85a72d751
   React-perflogger: 494c61caaf9b7da0a0a612fa4ed570ab7ab5819b
@@ -531,6 +530,7 @@ SPEC CHECKSUMS:
   RNFBDatabase: bf4a1be046e32582004f610dac39b1abb1177631
   RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 1561f557b0c2b6047a91f7619f666134e2288916
 
 PODFILE CHECKSUM: 3fb643ec256565872d7769849d8a12b04df453bd

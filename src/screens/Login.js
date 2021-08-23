@@ -6,7 +6,7 @@ import {
     Image,
 } from 'react-native';
 
-import FingerprintScanner from 'react-native-fingerprint-scanner';
+import TouchID from 'react-native-touch-id';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import { AppBar, PasswordInput, SimpleInput, SimpleButton, OverlayLoader } from '../components';
 import { CONSTANTS, FONTS, IMAGES, THEME } from '../config';
@@ -16,6 +16,7 @@ import { _gotoDashboard, _gotoForgetPassword } from '../navigation/service';
 import { _getAsync, _setAsync } from '../utils/async';
 import { _showDismissAlert } from '../utils/messages';
 import { _validateEmail } from '../utils/validation';
+import { FINGERPRINT_CONFIG, PLATFORM } from '../config/constants';
 
 const Login = ({navigation}) => {
 
@@ -66,37 +67,85 @@ const Login = ({navigation}) => {
     const _onFingerprintClick = async () => {
         
         // Checking is senser available
-        await FingerprintScanner.isSensorAvailable()
-        .then(async(type)=>{
-            FingerprintScanner.authenticate({})
-            .then(async()=>{
+        await TouchID.isSupported()
+        .then(async(biometryType)=>{
+            if(PLATFORM === 'ios'){
+                
+                if(biometryType == "TouchID"){
+                    
+                    TouchID.authenticate('Instant authentication using Touch Sensor',FINGERPRINT_CONFIG)
+                    .then(async()=>{
+                        const userEmail = await _getAsync('email');
+                        const userPassword = await _getAsync('password');
 
-                const userEmail = await _getAsync('email');
-                const userPassword = await _getAsync('password');
+                        setLoading(true);
 
-                setLoading(true);
+                        // Calling firebase login function to login
+                        await _loginUser(userEmail.toLowerCase().trim(), userPassword.trim())
+                        .then(()=>{
+                            // Login Successfull
+                            _gotoDashboard(navigation);
+                        })
+                        .catch((err)=>{
+                            // Login Unsuccessfull
+                            _showDismissAlert(err.message);
+                        });
 
-                // Calling firebase login function to login
-                await _loginUser(userEmail.toLowerCase().trim(), userPassword.trim())
-                .then(()=>{
-                    // Login Successfull
-                    _gotoDashboard(navigation);
-                })
-                .catch((err)=>{
-                    // Login Unsuccessfull
-                    _showDismissAlert(err.message);
-                });
+                        setLoading(false);
+                    })
+                    .catch((err)=>{
+                        if(err.code == 'USER_CANCELED' || err.code == 'AUTHENTICATION_CANCELED')
+                            console.log("User cancel the auth");
+                        else
+                            _showDismissAlert(err.message);
+                    })
+                    
+                }
+                else{
+                    setFingerprint(false);
+                    _showDismissAlert("Touch ID is not supported on your device or not enrolled yet");
+                }
+            }
+            else{
+                if(biometryType){
+                    TouchID.authenticate('Instant authentication using Touch Sensor',FINGERPRINT_CONFIG)
+                    .then(async()=>{
+                        const userEmail = await _getAsync('email');
+                        const userPassword = await _getAsync('password');
 
-                setLoading(false);
+                        setLoading(true);
 
-            })
-            .catch((err)=>{
-                _showDismissAlert(err.message);
-            })
+                        // Calling firebase login function to login
+                        await _loginUser(userEmail.toLowerCase().trim(), userPassword.trim())
+                        .then(()=>{
+                            // Login Successfull
+                            _gotoDashboard(navigation);
+                        })
+                        .catch((err)=>{
+                            // Login Unsuccessfull
+                            _showDismissAlert(err.message);
+                        });
+
+                        setLoading(false);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        if(err.code == 'USER_CANCELED' || err.code == 'AUTHENTICATION_CANCELED')
+                            console.log("User cancel the auth");
+                        else
+                            _showDismissAlert(err);
+                    })
+                }
+                else{
+                    setFingerprint(false);
+                    _showDismissAlert("Touch ID is not supported on your device or not enrolled yet");
+                }
+            } 
         })
         .catch((err)=>{
+            console.log(err);
             _showDismissAlert(err.message);
-        })
+        });
     }
 
     // Effect to check is finger print available
@@ -110,6 +159,7 @@ const Login = ({navigation}) => {
                 _showDismissAlert(err.message);
             })
         }
+        _checkFingerprint();
     },[])
 
     // Effect to get last logged in email
@@ -147,7 +197,7 @@ const Login = ({navigation}) => {
                 style={{
                     width: THEME.WP('70%'),
                     height: THEME.HP('20%'),
-                    marginTop: THEME.HP(THEME.THEMING.spacing_15),
+                    marginTop: THEME.HP(THEME.THEMING.spacing_10),
                 }}
             />
 
@@ -182,7 +232,6 @@ const Login = ({navigation}) => {
                 />
 
                 {
-                    //isFingerprintAvailable == 'true' &&
                     isFingerprintAvailable == 'true' &&
                     <View style={styles._fingerprintView}>
                         <Text style={[styles._label, {color: colors.border} ]}>or login with</Text>

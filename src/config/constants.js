@@ -41,9 +41,24 @@ const HOME_LIST = [
     }
 ];
 
+// Fingerprint modal Config
+const FINGERPRINT_CONFIG = {
+    title: 'MIS', // Android
+    imageColor: 'rgba(255,255,255,0.1)', // Android
+    imageErrorColor: '#ff0000', // Android
+    sensorDescription: 'Touch sensor', // Android
+    sensorErrorDescription: 'Authentication is failed. Try again', // Android
+    cancelText: 'Cancel', // Android
+    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+    unifiedErrors: false, // use unified error messages (default false)
+    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+  };
+
 export default {
     PLATFORM: Platform.OS,
     INPUT_HEIGHT: 45,
     ICON_SIZE: 24,
     HOME_LIST,
+    FINGERPRINT_CONFIG,
+    
 }

@@ -19,10 +19,10 @@
     "@react-navigation/native-stack": "^6.1.0",
     "react": "17.0.2",
     "react-native": "0.65.0",
-    "react-native-fingerprint-scanner": "^6.0.0",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.3.0",
     "react-native-screens": "^3.5.0",
+    "react-native-touch-id": "^4.4.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.13.0"
   },
